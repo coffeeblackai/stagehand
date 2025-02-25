@@ -2,6 +2,7 @@ import { Stagehand } from "@/dist";
 import { CoffeeBlackClient } from "../lib/llm/CoffeeBlackClient";
 import { CoffeeBlackResponseParser } from "../lib/llm/CoffeeBlackResponseParser";
 import StagehandConfig from "@/stagehand.config";
+import * as path from 'path';
 
 async function googleSearchExample() {
   // Initialize Stagehand with base config
@@ -21,12 +22,15 @@ async function googleSearchExample() {
     const client = new CoffeeBlackClient({
       debug: true,
     });
-    const parser = new CoffeeBlackResponseParser(page);
+    const parser = new CoffeeBlackResponseParser(page, { 
+      debug: true,
+      debugDir: path.join(process.cwd(), 'debug')
+    });
     
     // 2. Type "BrowserBase" into search
     const searchBoxScreenshot = await page.screenshot({ type: "png" });
     const typeResponse = await client.reason(
-      'Type "BrowserBase" into the search box',
+      'Search for "BrowserBase" on Google',
       searchBoxScreenshot as Buffer
     );
 
